@@ -3,7 +3,7 @@
 // import * as StorageStack from '../lib/storage_stack-stack';
 
 // example test. To run these tests, uncomment this file along with the
-// example resource in lib/storage_stack-stack.ts
+// example resource in lib/simple_storage_stack-stack.ts
 test('SQS Queue Created', () => {
 //   const app = new cdk.App();
 //     // WHEN

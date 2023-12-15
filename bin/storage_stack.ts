@@ -1,21 +1,37 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { StorageStackStack } from '../lib/storage_stack-stack';
+import { Construct } from "constructs";
+import { SimpleStorageStack } from '../lib/simple_storage_stack-stack';
+import {RDSDataStack} from "../lib/rds-data-stack";
+
+const DEFAULT_CONFIG = {
+    env: {
+        account: process.env.CDK_DEFAULT_ACCOUNT,
+        region: process.env.CDK_DEFAULT_REGION,
+    },
+};
 
 const app = new cdk.App();
-new StorageStackStack(app, 'StorageStackStack', {
-  /* If you don't specify 'env', this stack will be environment-agnostic.
-   * Account/Region-dependent features and context lookups will not work,
-   * but a single synthesized template can be deployed anywhere. */
+const prefix = stackPrefix(app);
 
-  /* Uncomment the next line to specialize this stack for the AWS Account
-   * and Region that are implied by the current CLI configuration. */
-  // env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
-
-  /* Uncomment the next line if you know exactly what Account and Region you
-   * want to deploy the stack to. */
-  // env: { account: '123456789012', region: 'us-east-1' },
-
-  /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
+new SimpleStorageStack(app, 'StorageStackStack', {
+  env: DEFAULT_CONFIG.env,
+  stackName: `${prefix}SimpleStorageStack`
 });
+
+new RDSDataStack(app, 'RDSDataStack', {
+    env: DEFAULT_CONFIG.env,
+    stackName: `${prefix}RDSDataStack`
+});
+
+function stackPrefix (stack: Construct): string {
+    const prefixValue = stack.node.tryGetContext('stack_prefix');
+
+    if (prefixValue !== undefined) {
+        return prefixValue.trim();
+    }
+    return ''.trim();
+}
+
+app.synth();
