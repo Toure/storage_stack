@@ -42,8 +42,8 @@ export class SimpleStorageStack extends cdk.Stack {
             throw new Error('S3 nexusBlobBucket failed to create.');
         }
 
-        const flowLogPrefix = 'vpcFlowLogs';
-        vpc.addFlowLog('VpcFlowlogs', {
+        const flowLogPrefix = 'nexusVpcFlowLogs';
+        vpc.addFlowLog('NexusVpcFlowlogs', {
             destination: FlowLogDestination.toS3(logBucket, flowLogPrefix),
         });
 
